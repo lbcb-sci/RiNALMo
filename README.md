@@ -25,7 +25,7 @@ cd RiNALMo
 pip install .
 ```
 
-After installation you can easily use RiNALMo to obtain nucelotide representations:
+After installation you can easily use RiNALMo to obtain nucleotide representations:
 ```python
 import torch
 from rinalmo.pretrained import get_pretrained_model
