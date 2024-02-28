@@ -1,0 +1,25 @@
+{
+    "FTP": {
+        "ADDRESS": {
+            "EMBL": "ftp.ebi.ac.uk",
+            "NCBI": "ftp.ncbi.nlm.nih.gov",
+            "ENSEMBL": "ftp.ensembl.org",
+            "ENSEMBL_GENOMES": "ftp.ensemblgenomes.ebi.ac.uk"
+        },
+        "PATH": {
+            "RNACENTRAL_ACTIVE_SEQS": "/pub/databases/RNAcentral/current_release/sequences/rnacentral_active.fasta.gz",
+            "RNACENTRAL_INACTIVE_SEQS": "/pub/databases/RNAcentral/current_release/sequences/rnacentral_inactive.fasta.gz",
+            "RFAM_SEQS": "/pub/databases/Rfam/CURRENT/fasta_files/Rfam.fa.gz",
+            "NT_SEQS": "/blast/db/FASTA/nt.gz",
+            "ENSEMBL_SEQS_DIR": "/pub/release-109/fasta/",
+            "ENSEMBL_BACTERIA_SEQS_DIR": "/pub/bacteria/release-56/fasta/"
+        }
+    },
+    "GET": {
+        "URL": {
+            "SPOTRNA_BPRNA": "https://dl.dropboxusercontent.com/s/w3kc4iro8ztbf3m/bpRNA_dataset.zip",
+            "HUMAN_5UTR_LIB": "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE114002&format=file/GSE114002_RAW.tar",
+            "ARCHIVEII_SPLITS": "https://github.com/marcellszi/dl-rna/releases/download/Data/ct-splits.tar.gz"
+        }
+    }
+}

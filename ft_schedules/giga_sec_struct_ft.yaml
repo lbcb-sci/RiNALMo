@@ -1,0 +1,35 @@
+0:
+    - pred_head.*
+3:
+    - lm.transformer.final_layer_norm.*
+    - lm.transformer.blocks.32.*
+    - lm.transformer.blocks.31.*
+    - lm.transformer.blocks.30.*
+6:
+    - lm.transformer.blocks.29.*
+    - lm.transformer.blocks.28.*
+    - lm.transformer.blocks.27.*
+9:
+    - lm.transformer.blocks.26.*
+    - lm.transformer.blocks.25.*
+    - lm.transformer.blocks.24.*
+12:
+    - lm.transformer.blocks.23.*
+    - lm.transformer.blocks.22.*
+    - lm.transformer.blocks.21.*
+15:
+    - lm.transformer.blocks.20.*
+    - lm.transformer.blocks.19.*
+    - lm.transformer.blocks.18.*
+18:
+    - lm.transformer.blocks.17.*
+    - lm.transformer.blocks.16.*
+    - lm.transformer.blocks.15.*
+21:
+    - lm.transformer.blocks.14.*
+    - lm.transformer.blocks.13.*
+    - lm.transformer.blocks.12.*
+24:
+    - lm.transformer.blocks.11.*
+    - lm.transformer.blocks.10.*
+    - lm.transformer.blocks.9.*

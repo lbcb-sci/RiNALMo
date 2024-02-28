@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rinalmo"
+version = "1.0.0"
+dependencies = [
+    "torch>=2.0.0",
+    "numpy>=1.23.5",
+    "ml_collections>=0.1.1",
+    "packaging>=23.2",
+    "gdown>=5.1.0",
+    "flash-attn>=2.3.2",
+]
+authors = [
+  {name="Rafael Josip Penić", email="rafael-josip.penic@fer.hr"},
+  {name="Tin Vlašić", email="tin_vlasic@gis.a-star.edu.sg"},
+  {name="Roland G. Huber"},
+  {name="Yue Wan"},
+  {name="Mile Šikić", email="mile_sikic@gis.a-star.edu.sg"},
+]
+description = "RiboNucleic Acid Language Model."
+requires-python = ">=3.8"
+keywords = ["RNA", "Biology", "Deep Learning", "LLM"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+license = {file = "LICENSE"}
+readme = "README.md"
+
+[tool.setuptools]
+packages = ["rinalmo", "rinalmo.data", "rinalmo.model"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+'rinalmo' = ['resources/*.json']
