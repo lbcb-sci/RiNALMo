@@ -1,6 +1,6 @@
 # RiboNucleic Acid Language Model - RiNALMo
 
-### [Paper](https://arxiv.org/abs/2106.00404) | [Data]()
+### [Paper](https://arxiv.org/abs/2106.00404) | [Weights](https://zenodo.org/records/10725749)
 
 [Rafael Josip Penić](https://www.fer.unizg.hr/en/rafael_josip.penic)<sup>1</sup>,
 [Tin Vlašić](https://sites.google.com/view/tinvlasic)<sup>2</sup>,
