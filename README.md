@@ -46,6 +46,44 @@ with torch.no_grad(), torch.cuda.amp.autocast():
 print(outputs["representation"])
 ```
 
+## Installation
+1. Clone the repo.
+```bash
+git clone https://github.com/lbcb-sci/RiNALMo
+cd RiNALMo
+```
+2. Create conda environment. All external dependencies should be contained in ```environment.yml```.
+```bash
+# create conda environment for RiNALMo
+conda env create -f environment.yml
+
+# activate RiNALMo environment
+conda activate rinalmo
+```
+3. Download pre-trained weights.
+```bash
+
+```   
+4. Download fine-tuned weights.
+```bash
+# Download fine-tuned weights for secondary structure prediction.
+
+# Download fine-tuned weights for splice-site prediction.
+
+# Download fine-tuned weights for mean ribosome loading prediction.
+
+``` 
+
+## Usage
+### Inference
+
+#### Example
+
+### Fine-tuning
+
+#### Example
+
+
 ## License
 This code is licensed under the MIT license found in the [LICENSE](./LICENSE) file
 in the root directory of this source tree.
