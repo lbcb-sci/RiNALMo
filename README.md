@@ -23,6 +23,7 @@ Use following commands for the installation (Prerequisites: ```Python>=3.8``` an
 git clone https://github.com/lbcb-sci/RiNALMo
 cd RiNALMo
 pip install .
+pip install flash-attn
 ```
 
 After installation you can easily use RiNALMo to obtain nucleotide representations:
