@@ -43,3 +43,26 @@ with torch.no_grad(), torch.cuda.amp.autocast():
 
 print(outputs["representation"])
 ```
+
+## License
+This code is licensed under the MIT license found in the [LICENSE](./LICENSE) file
+in the root directory of this source tree.
+
+## Citation
+If you find our work useful in your research, please cite:
+```bibtex
+@article{
+  title={RiNALMo: General-Purpose RNA Language Models Can Generalize Well on Structure Prediction Tasks},
+  author={Penić, Rafael Josip and Vlašić, Tin and Huber, Roland G. and Wan, Yue and Šikić, Mile},
+  journal={arXiv preprint arXiv:},
+  year={2024}
+}
+```
+
+## Contact
+If you have any questions, please feel free to email the authors.
+
+## Acknowledgment
+This work was supported in part by the National Research Foundation (NRF) Competitive Research Programme (CRP) under Project _Identifying Functional RNA Tertiary Structures in Dengue Virus_ (NRF-CRP27-2021RS-0001) and in part by the A\*STAR under Grant _GAP2: A\*STAR RNA-Foundation Model (A\*STAR RNA-FM)_ (I23D1AG079).
+
+The computational work for the paper was partially performed on resources of the National Supercomputing Centre, Singapore [https://www.nscc.sg](https://www.nscc.sg).
