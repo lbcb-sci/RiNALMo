@@ -18,7 +18,7 @@
     "GET": {
         "URL": {
             "SPOTRNA_BPRNA": "https://dl.dropboxusercontent.com/s/w3kc4iro8ztbf3m/bpRNA_dataset.zip",
-            "HUMAN_5UTR_LIB": "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE114002&format=file/GSE114002_RAW.tar",
+            "HUMAN_5UTR_LIB": "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE114002&format=file",
             "ARCHIVEII_SPLITS": "https://github.com/marcellszi/dl-rna/releases/download/Data/ct-splits.tar.gz"
         }
     }
