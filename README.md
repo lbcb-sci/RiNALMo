@@ -89,20 +89,33 @@ wget https://zenodo.org/records/10725749/files/rinalmo_giga_mrl_ft.pt?download=1
 ``` 
 
 ## Usage
+We provide pre-trained RiNALMo weights and fine-tuned weights for three downstream tasks: mean ribosome loading prediction, secondary structure prediction and splice-site prediction.
 For both inference and fine-tuning use ```train_<downstream_task>.py``` scripts.
 
 ### Inference
-In order to use the provided fine-tuned RiNALMo models and prediction heads for inference only, please run the scripts with the following input arguments:
+In order to employ the provided fine-tuned RiNALMo models and prediction heads for inference, please run the scripts using the following input arguments:
 ```bash
-
+# skip fine-tuning and run the evaluation on the test set
+--test_only
+# path to the '.pt' file containing fine-tuned model weights
+--init_params
+# dataset on which you would like to evaluate the fine-tuned model
+--dataset
+# download and prepare data (if needed)
+--prepare_data
+# Directory that will contain or already contains training, validation and test data
+data_dir
+# directory for all the output files
+--output_dir
+```
+#### Example
+To evaluate the fine-tuned RiNALMo model and prediction head on archiveII 5S rRNA test dataset for secondary structure prediction, use the ```rinalmo_giga_ss_archiveII-5s_ft.pt``` weights. Here, we provide an example run command.
+```
+python train_sec_struct_prediction.py ./datasets/archiveII/5s/ --test_only --init_params ./weights/rinalmo_giga_ss_archiveII-5s_ft.pt --dataset archiveII_5s --prepare_data --output_dir ./outputs/archiveII/5s/
 ```
 
-#### Example
-
 ### Fine-tuning
-
-#### Example
-
+In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Other input arguments can be found at the bottom of the ```train_<downstream_task>.py``` scripts. For the splice-site prediction task, dataset and data preprocessing code is available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
 
 ## License
 This code is licensed under the MIT license found in the [LICENSE](./LICENSE) file
