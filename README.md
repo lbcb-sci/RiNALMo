@@ -19,7 +19,7 @@ Ribonucleic acid (RNA) plays a variety of crucial roles in fundamental biologica
 
  <img src="./imgs/rinalmo_3.png" width="1000">
 
-## Quick Start
+## Quick Start - Inference
 Use following commands for the installation (Prerequisites: ```Python>=3.8``` and ```CUDA>=11.8```):
 ```bash
 git clone https://github.com/lbcb-sci/RiNALMo
@@ -92,10 +92,10 @@ cd ..
 
 ## Usage
 We provide pre-trained RiNALMo weights and fine-tuned weights for three downstream tasks: mean ribosome loading prediction, secondary structure prediction and splice-site prediction.
-For both inference and fine-tuning use ```train_<downstream_task>.py``` scripts.
+For both evaluation and fine-tuning use ```train_<downstream_task>.py``` scripts.
 
-### Inference
-In order to employ the provided fine-tuned RiNALMo models and prediction heads for inference, please run the scripts using the following input arguments:
+### Evaluation
+In order to evaluate the provided fine-tuned RiNALMo models and prediction heads, please run the scripts using the following input arguments:
 ```bash
 # skip fine-tuning and run the evaluation on the test set
 --test_only
@@ -113,11 +113,11 @@ data_dir
 #### Example
 To evaluate the fine-tuned RiNALMo model and prediction head on archiveII 5S rRNA test dataset for secondary structure prediction, use the ```rinalmo_giga_ss_archiveII-5s_ft.pt``` weights. Here, we provide an example run command.
 ```
-python train_sec_struct_prediction.py ./datasets/archiveII/5s/ --test_only --init_params ./weights/rinalmo_giga_ss_archiveII-5s_ft.pt --dataset archiveII_5s --prepare_data --output_dir ./outputs/archiveII/5s/
+python train_sec_struct_prediction.py ./ss_data --test_only --init_params ./weights/rinalmo_giga_ss_archiveII-5s_ft.pt --dataset archiveII_5s --prepare_data --output_dir ./outputs/archiveII/5s/ --accelerator gpu --devices 1
 ```
 
 ### Fine-tuning
-In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Other input arguments can be found at the bottom of the ```train_<downstream_task>.py``` scripts. For the splice-site prediction task, dataset and data preprocessing code is available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
+In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Use ```--help``` to learn about other available arguments. For the splice-site prediction task, dataset and data preprocessing code is available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
 
 ## License
 This code is licensed under the MIT license found in the [LICENSE](./LICENSE) file
