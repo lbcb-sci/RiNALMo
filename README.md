@@ -86,6 +86,8 @@ wget https://zenodo.org/records/10725749/files/rinalmo_giga_splice_donor_ft.pt?d
 
 # Download fine-tuned weights for mean ribosome loading prediction.
 wget https://zenodo.org/records/10725749/files/rinalmo_giga_mrl_ft.pt?download=1
+
+cd ..
 ``` 
 
 ## Usage
