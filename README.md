@@ -89,7 +89,13 @@ wget https://zenodo.org/records/10725749/files/rinalmo_giga_mrl_ft.pt?download=1
 ``` 
 
 ## Usage
+For both inference and fine-tuning use ```train_<downstream_task>.py``` scripts.
+
 ### Inference
+In order to use the provided fine-tuned RiNALMo models and prediction heads for inference only, please run the scripts with the following input arguments:
+```bash
+
+```
 
 #### Example
 
