@@ -64,7 +64,7 @@ conda activate rinalmo
 ```bash
 mkdir weights
 cd weights
-wget -O rinalmo_giga_pretrained.pt https://zenodo.org/records/10725749/files/rinalmo_giga_pretrained.pt
+wget rinalmo_giga_pretrained.pt https://zenodo.org/records/10725749/files/rinalmo_giga_pretrained.pt
 ```   
 4. Download fine-tuned weights.
 ```bash
