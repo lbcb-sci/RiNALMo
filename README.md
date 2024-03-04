@@ -1,6 +1,6 @@
 # RiboNucleic Acid Language Model - RiNALMo
 
-### [Paper](https://arxiv.org/abs/2106.00404) | [Weights](https://zenodo.org/records/10725749)
+### [Paper](https://arxiv.org/abs/2403.00043) | [Weights](https://zenodo.org/records/10725749)
 
 [Rafael Josip Penić](https://www.fer.unizg.hr/en/rafael_josip.penic)<sup>1</sup>,
 [Tin Vlašić](https://sites.google.com/view/tinvlasic)<sup>2</sup>,
@@ -129,7 +129,7 @@ If you find our work useful in your research, please cite:
 @article{
   title={RiNALMo: General-Purpose RNA Language Models Can Generalize Well on Structure Prediction Tasks},
   author={Penić, Rafael Josip and Vlašić, Tin and Huber, Roland G. and Wan, Yue and Šikić, Mile},
-  journal={arXiv preprint arXiv:},
+  journal={arXiv preprint arXiv:2403.00043},
   year={2024}
 }
 ```
