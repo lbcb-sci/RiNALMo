@@ -117,7 +117,7 @@ python train_sec_struct_prediction.py ./ss_data --test_only --init_params ./weig
 ```
 
 ### Fine-tuning
-In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Use ```--help``` to learn about other available arguments. For the splice-site prediction task, dataset and data preprocessing code is available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
+In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Use ```--help``` to learn about other available arguments. For the splice-site prediction task, the dataset and data preprocessing code are available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
 
 ## License
 This code is licensed under the MIT license found in the [LICENSE](./LICENSE) file
@@ -126,7 +126,7 @@ in the root directory of this source tree.
 ## Citation
 If you find our work useful in your research, please cite:
 ```bibtex
-@article{
+@article{penic2024_rinalmo,
   title={RiNALMo: General-Purpose RNA Language Models Can Generalize Well on Structure Prediction Tasks},
   author={Penić, Rafael Josip and Vlašić, Tin and Huber, Roland G. and Wan, Yue and Šikić, Mile},
   journal={arXiv preprint arXiv:2403.00043},
@@ -135,7 +135,7 @@ If you find our work useful in your research, please cite:
 ```
 
 ## Contact
-If you have any questions, please feel free to email the authors.
+If you have any questions, please feel free to email the authors or open an issue.
 
 ## Acknowledgment
 This work was supported in part by the National Research Foundation (NRF) Competitive Research Programme (CRP) under Project _Identifying Functional RNA Tertiary Structures in Dengue Virus_ (NRF-CRP27-2021RS-0001) and in part by the A\*STAR under Grant _GAP2: A\*STAR RNA-Foundation Model (A\*STAR RNA-FM)_ (I23D1AG079).
