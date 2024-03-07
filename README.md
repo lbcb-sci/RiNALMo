@@ -120,8 +120,20 @@ python train_sec_struct_prediction.py ./ss_data --test_only --init_params ./weig
 In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Use ```--help``` to learn about other available arguments. For the splice-site prediction task, the dataset and data preprocessing code are available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
 
 ## License
-This code is licensed under the MIT license found in the [LICENSE](./LICENSE) file
-in the root directory of this source tree.
+
+Copyright 2024 Šikić Lab - AI in Genomics
+
+Licensed under the Apache License, Version 2.0 (the "[License](./LICENSE)");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 ## Citation
 If you find our work useful in your research, please cite:
