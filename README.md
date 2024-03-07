@@ -123,6 +123,7 @@ In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rin
 
 Copyright 2024 Šikić Lab - AI in Genomics
 
+### RiNALMo Code License
 Licensed under the Apache License, Version 2.0 (the "[License](./LICENSE)");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -134,6 +135,9 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+### Model Parameters License
+The RiNALMo parameters are made available under the terms of the Creative Commons Attribution 4.0 International (CC BY 4.0) license. You can find details at: [https://creativecommons.org/licenses/by/4.0/legalcode](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 ## Citation
 If you find our work useful in your research, please cite:
