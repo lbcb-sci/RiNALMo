@@ -89,7 +89,9 @@ wget https://zenodo.org/records/10725749/files/rinalmo_giga_splice_donor_ft.pt
 wget https://zenodo.org/records/10725749/files/rinalmo_giga_mrl_ft.pt
 
 cd ..
-``` 
+```
+
+You can also download pre-trained weights for smaller RiNALMo models (RiNALMo-148M (mega) and RiNALMo-33,5M (micro)) at https://drive.google.com/drive/folders/1vGk3gY8c01o0wQfpmyX5vOY4Wy8EbQS5.
 
 ## Usage
 We provide pre-trained RiNALMo weights and fine-tuned weights for three downstream tasks: mean ribosome loading prediction, secondary structure prediction and splice-site prediction.
