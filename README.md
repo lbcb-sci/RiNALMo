@@ -91,6 +91,7 @@ wget https://zenodo.org/records/10725749/files/rinalmo_giga_mrl_ft.pt
 cd ..
 ```
 
+### Smaller model weights
 You can also download pre-trained weights for smaller RiNALMo models (RiNALMo-148M (mega) and RiNALMo-33,5M (micro)) at https://drive.google.com/drive/folders/1vGk3gY8c01o0wQfpmyX5vOY4Wy8EbQS5.
 
 ## Usage
