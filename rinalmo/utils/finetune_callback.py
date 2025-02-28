@@ -51,5 +51,5 @@ class GradualUnfreezing(BaseFinetuning):
             self.unfreeze_and_add_param_group(
                 modules=modules_to_unfreeze.values(),
                 optimizer=optimizer,
-                initial_denom_lr=1.0,
+                initial_denom_lr=10.0,
             )

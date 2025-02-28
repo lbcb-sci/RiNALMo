@@ -153,7 +153,7 @@ class SecStructPredictionWrapper(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.lr)
-        lr_scheduler = LinearLR(optimizer, start_factor=1.0, end_factor=0.1, total_iters=7500) # TODO: Hardcoded
+        lr_scheduler = LinearLR(optimizer, start_factor=1.0, end_factor=0.1, total_iters=7000) # TODO: Hardcoded
 
         return {
             "optimizer": optimizer,
