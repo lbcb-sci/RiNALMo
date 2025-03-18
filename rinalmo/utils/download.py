@@ -13,6 +13,8 @@ import os
 import tarfile
 import json
 
+import gdown
+
 # Ignore tqdm's clamping warnings
 warnings.filterwarnings("ignore", category=TqdmWarning)
 
@@ -116,6 +118,12 @@ def _ftp_dir_download(
         remote_paths = list(filter(lambda p: any(p.endswith(ext) for ext in file_extensions), remote_paths))
 
     _ftp_download(ftp_url, remote_paths, local_download_dir_path, extract_archives)
+
+def _google_drive_download(folder_id: str, local_dir_path: Path) -> Path:
+    output_path = local_dir_path
+    
+    url = f"https://drive.google.com/drive/folders/{folder_id}"
+    gdown.download_folder(url=url, output=str(output_path), quiet=False)
 
 # ------------------------------------------------------
 
@@ -282,3 +290,62 @@ def download_ribosome_loading_data(local_download_dir_path: Path):
         tar.extractall(local_download_dir_path)
 
     archive_path.unlink()
+
+def download_splice_site_data(local_download_dir_path: Path):
+    url = remote_data["GET"]["URL"]["SPLICE_SITES_SPLICEBERT"]
+
+    # Download the zip file
+    print(f"Downloading splice site data from: {url}")
+    tar_path = _get_download(url, local_download_dir_path)
+    print(f"Downloaded into {tar_path}")
+    
+    # Extract the zip file
+    print(f"Extracting data...")
+    with tarfile.open(tar_path, "r:gz") as tar:
+        for member in tar.getmembers():
+            try:
+                tar.extract(member, path=local_download_dir_path)
+                member_path = os.path.join(local_download_dir_path, member.name)
+                os.chmod(member_path, 0o777)  # Set permissions for the extracted file
+            except PermissionError as e:
+                print(f"Permission denied: {e.filename}")
+            except Exception as e:
+                print(f"Error extracting {member.name}: {e}")
+    
+    # Ensure the local directory exists
+    os.makedirs(local_download_dir_path, exist_ok=True)
+
+    # Clean up
+    data_path = Path(local_download_dir_path) / "data"
+    spliceator_folder = data_path / "spliceator"
+    for root, dirs, files in os.walk(data_path, topdown=False):
+        for name in files:
+            file_path = Path(root) / name
+            if not file_path.is_relative_to(spliceator_folder):
+                file_path.unlink()
+        for name in dirs:
+            dir_path = Path(root) / name
+            if dir_path != spliceator_folder and not dir_path.is_relative_to(spliceator_folder):
+                shutil.rmtree(dir_path)
+
+    tar_path.unlink()
+
+    return spliceator_folder
+
+def download_ncrna_data(local_download_dir_path: Path):
+    local_download_dir_path.mkdir(parents=True, exist_ok=True)
+
+    print("Downloading ncRNA datasets...")
+    _get_download(remote_data["GET"]["URL"]["RFAM_NOVEL"], local_download_dir_path)
+
+TE_EL_DATASETS = ['Muscle_sequence.csv', 'pc3_sequence.csv', 'HEK_sequence.csv']
+def download_mrna_te_and_el_data(local_download_dir_path: Path):
+    local_download_dir_path.mkdir(parents=True, exist_ok=True)
+
+    print("Downloading mRNA translation efficiency and expression level datasets...")
+    _google_drive_download(remote_data["GET"]["URL"]["TE_EL"], local_download_dir_path)
+
+    # remove all files except for the file names in TE_EL_DATASETS
+    for file in local_download_dir_path.glob("*"):
+        if file.name not in TE_EL_DATASETS:
+            file.unlink()

@@ -172,3 +172,17 @@ class SpliceSitePredictionHead(nn.Module):
     def forward(self, x):
         x = self.classifier(x)
         return x
+
+class ncRNAClassificationHead(nn.Module):
+    def __init__(self, c_in, embed_dim, n_classes):
+        super().__init__()
+
+        self.classifier = nn.Sequential(
+            nn.Linear(c_in, embed_dim),
+            nn.GELU(),
+            nn.Linear(embed_dim, n_classes),
+        )
+
+    def forward(self, x):
+        x = self.classifier(x)
+        return x

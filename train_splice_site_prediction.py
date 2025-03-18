@@ -176,6 +176,7 @@ def main(args):
         batch_size=args.batch_size,
         num_workers=args.num_workers,
         pin_memory=args.pin_memory,
+        skip_data_preparation = not args.prepare_data
     )
 
     # Set up callbacks and loggers
@@ -252,6 +253,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data_dir", type=str, default=None,
         help="Directory with all the training and evaluation data"
+    )
+    parser.add_argument(
+        "--prepare_data", action="store_true", default=False,
+        help="Download and prepare training, validation and test data"
     )
     parser.add_argument(
         "--test_data_dir", type=str, default=None,

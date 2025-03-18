@@ -19,7 +19,10 @@
         "URL": {
             "SPOTRNA_BPRNA": "https://dl.dropboxusercontent.com/s/w3kc4iro8ztbf3m/bpRNA_dataset.zip",
             "HUMAN_5UTR_LIB": "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE114002&format=file",
-            "ARCHIVEII_SPLITS": "https://github.com/marcellszi/dl-rna/releases/download/Data/ct-splits.tar.gz"
+            "ARCHIVEII_SPLITS": "https://github.com/marcellszi/dl-rna/releases/download/Data/ct-splits.tar.gz",
+            "SPLICE_SITES_SPLICEBERT": "https://zenodo.org/record/7995778/files/data.tar.gz?download=1",
+            "RFAM_NOVEL": "https://raw.githubusercontent.com/bioinformatics-sannio/ncrna-deep/master/datasets/Rfam-novel/train_test_val_sets_177_families.RDa",
+            "TE_EL": "190oihtrwCxWjtDCK9kJzyhXPKxbr5xoR"
         }
     }
 }
