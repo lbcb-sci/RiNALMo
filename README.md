@@ -88,6 +88,10 @@ wget https://zenodo.org/records/10725749/files/rinalmo_giga_splice_donor_ft.pt
 # Download fine-tuned weights for mean ribosome loading prediction.
 wget https://zenodo.org/records/10725749/files/rinalmo_giga_mrl_ft.pt
 
+# Download fine-tuned weights for ncRNA functional family classification.
+wget https://zenodo.org/records/10725749/files/rinalmo_giga_ncrna_class_0_noise_ft.pt
+wget https://zenodo.org/records/10725749/files/rinalmo_giga_ncrna_class_200_noise_ft.pt
+
 cd ..
 ```
 
@@ -121,7 +125,7 @@ python train_sec_struct_prediction.py ./ss_data --test_only --init_params ./weig
 ```
 
 ### Fine-tuning
-In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Use ```--help``` to learn about other available arguments. For the splice-site prediction task, the dataset and data preprocessing code are available at [https://git.unistra.fr/nscalzitti/spliceator.git](https://git.unistra.fr/nscalzitti/spliceator.git).
+In order to fine-tune RiNALMo, use ```--pretrained_rinalmo_weights ./weights/rinalmo_giga_pretrained.pt ``` input argument. Use ```--help``` to learn about other available arguments.
 
 ## License
 
