@@ -134,3 +134,4 @@ dependencies:
       - scipy==1.11.3
       - threadpoolctl==3.2.0
       - tzdata==2023.3
+      - gdown==5.2.0
