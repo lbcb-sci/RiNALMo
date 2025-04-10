@@ -5,10 +5,9 @@ import math
 
 from rinalmo.model.rope import RotaryPositionEmbedding
 
-from flash_attn import flash_attn_varlen_qkvpacked_func, flash_attn_qkvpacked_func
+import torch.nn.functional as F
 from flash_attn.layers.rotary import RotaryEmbedding
 
-from flash_attn.bert_padding import unpad_input, pad_input
 
 from einops import rearrange
 
@@ -69,6 +68,7 @@ class MultiHeadAttention(nn.Module):
 
         return output, attn
 
+
 class MultiHeadSelfAttention(nn.Module):
     def __init__(self, c_in, num_heads, attention_dropout=0.0, use_rot_emb=True, bias=False):
         super().__init__()
@@ -78,150 +78,70 @@ class MultiHeadSelfAttention(nn.Module):
     def forward(self, x, attn_mask=None, key_pad_mask=None):
         return self.mh_attn(x, x, x, attn_mask, key_pad_mask)
 
-class FlashAttention(nn.Module):
-    """
-    Implement the scaled dot product attention with softmax.
-    """
-    def __init__(self, causal=False, softmax_scale=None, attention_dropout=0.0):
-        """
-        Args:
-            causal: bool. Whether to apply causal attention mask (e.g., for auto-regressive modeling).
-            softmax_scale: float. The scaling of QK^T before applying softmax.
-                           Default to 1 / sqrt(headdim).
-            attention_dropout: float. The dropout rate to apply to the attention
-                               (default: 0.0)
-        """
-        super().__init__()
-        self.softmax_scale = softmax_scale
-        self.attention_dropout = attention_dropout
-        self.causal = causal
-
-    def forward(self, qkv, cu_seqlens=None, max_seqlen=None, return_attn_probs=False):
-        """
-        Arguments
-        ---------
-            qkv: The tensor containing the query, key, and value.
-                 If cu_seqlens is None and max_seqlen is None, then qkv has shape (B, S, 3, H, D).
-                 If cu_seqlens is not None and max_seqlen is not None, then qkv has shape
-                 (total, 3, H, D), where total is the sum of the sequence lengths in the batch.
-            cu_seqlens: (batch_size + 1,), dtype torch.int32. The cumulative sequence lengths
-                        of the sequences in the batch, used to index into qkv.
-            max_seqlen: int. Maximum sequence length in the batch.
-            return_attn_probs: bool. Whether to return the attention probabilities. This option is for
-                               testing only. The returned probabilities are not guaranteed to be correct
-                               (they might not have the right scaling).
-        Returns:
-        --------
-            out: (total, H, D) if cu_seqlens is not None and max_seqlen is not None,
-                 else (B, S, H, D).
-        """
-        assert qkv.dtype in [torch.float16, torch.bfloat16]
-        assert qkv.is_cuda
-
-        unpadded = cu_seqlens is not None
-
-        if unpadded:
-            assert cu_seqlens.dtype == torch.int32
-            assert max_seqlen is not None
-            assert isinstance(max_seqlen, int)
-            return flash_attn_varlen_qkvpacked_func(
-                qkv,
-                cu_seqlens,
-                max_seqlen,
-                self.attention_dropout if self.training else 0.0,
-                softmax_scale=self.softmax_scale,
-                causal=self.causal,
-                return_attn_probs=return_attn_probs
-            )
-        else:
-            return flash_attn_qkvpacked_func(
-                qkv,
-                self.attention_dropout if self.training else 0.0,
-                softmax_scale=self.softmax_scale,
-                causal=self.causal,
-                return_attn_probs=return_attn_probs
-            )
 
 class FlashMultiHeadSelfAttention(nn.Module):
-    """
-    Multi-head self-attention implemented using FlashAttention.
-    """
     def __init__(self, embed_dim, num_heads, attention_dropout=0.0, causal=False, use_rot_emb=True, bias=False):
         super().__init__()
-        assert embed_dim % num_heads == 0, "Embedding dimensionality must be divisible with number of attention heads!"
-
-        self.causal = causal
+        assert embed_dim % num_heads == 0, "Embedding dim must be divisible by num_heads"
 
         self.embed_dim = embed_dim
         self.num_heads = num_heads
-
-        self.head_dim = self.embed_dim // self.num_heads
+        self.head_dim = embed_dim // num_heads
         self.qkv_dim = self.head_dim * num_heads * 3
-
-        self.rotary_emb_dim = self.head_dim
+        self.causal = causal
         self.use_rot_emb = use_rot_emb
+
+        self.Wqkv = nn.Linear(embed_dim, self.qkv_dim, bias=bias)
+        self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
+        self.attention_dropout = nn.Dropout(attention_dropout)
+
         if self.use_rot_emb:
-            self.rotary_emb = RotaryEmbedding(
-                dim=self.rotary_emb_dim,
+            self.rotary_emb = RotaryEmbedding(  # reuse your existing class
+                dim=self.head_dim,
                 base=10000.0,
                 interleaved=False,
                 scale_base=None,
-                pos_idx_in_fp32=True,  # fp32 RoPE precision
+                pos_idx_in_fp32=True,
                 device=None
             )
-        self.flash_self_attn = FlashAttention(causal=self.causal, softmax_scale=None, attention_dropout=attention_dropout)
-
-        self.Wqkv = nn.Linear(self.embed_dim, self.qkv_dim, bias=bias)
-
-        self.attention_dropout = nn.Dropout(p=attention_dropout)
-
-        self.out_proj = nn.Linear(self.embed_dim, self.embed_dim, bias=bias)
 
     def forward(self, x, key_padding_mask=None, return_attn_probs=False):
         """
-        Arguments:
-            x: (batch, seqlen, hidden_dim) (where hidden_dim = num_heads * head_dim)
-            key_pad_mask: boolean mask, True means to keep, False means to mask out.
-                          (batch, seqlen)
-            return_attn_probs: whether to return attention masks (False by default)
+        x: (batch, seqlen, embed_dim)
+        key_padding_mask: (batch, seqlen) - False means masked
         """
+        B, S, _ = x.shape
 
-        qkv = self.Wqkv(x)
+        qkv = self.Wqkv(x)  # (B, S, 3 * H * D)
         qkv = rearrange(qkv, 'b s (three h d) -> b s three h d', three=3, h=self.num_heads)
 
         if self.use_rot_emb:
-            qkv = self.rotary_emb(qkv, seqlen_offset=0)
+            qkv = self.rotary_emb(qkv, seqlen_offset=0)  # Apply rotary embeddings to Q and K only
 
-        if return_attn_probs:
-            bs = qkv.shape[0]
-            qkv = torch.permute(qkv, (0, 3, 2, 1, 4))
-            q = qkv[:, :, 0, :, :]
-            k = qkv[:, :, 1, :, :]
-            v = qkv[:, :, 2, :, :]
-            out, attn = dot_product_attention(q, k, v, key_pad_mask=torch.logical_not(key_padding_mask) if key_padding_mask is not None else None, dropout=self.attention_dropout)
-            output = out.transpose(-2, -3).contiguous().view(bs, -1, self.num_heads * self.head_dim)
-            output = self.out_proj(output)
-            return output, attn
+        qkv = torch.permute(qkv, (0, 3, 2, 1, 4))
+        q = qkv[:, :, 0, :, :]
+        k = qkv[:, :, 1, :, :]
+        v = qkv[:, :, 2, :, :]
+
+        attn_scores = torch.matmul(q, k.transpose(-2, -1))  # (B, H, S, S)
+        attn_scores /= self.head_dim ** 0.5
 
         if key_padding_mask is not None:
-            batch_size = qkv.shape[0]
-            seqlen = qkv.shape[1]
-            x_unpad, indices, cu_seqlens, max_s = unpad_input(qkv, key_padding_mask)
-            output_unpad = self.flash_self_attn(
-                    x_unpad, 
-                    cu_seqlens=cu_seqlens, 
-                    max_seqlen=max_s, 
-                    return_attn_probs=return_attn_probs
-                    )
-            out = pad_input(rearrange(output_unpad, '... h d -> ... (h d)'), indices, batch_size, seqlen)
-        else:
-            output = self.flash_self_attn(
-                    qkv, 
-                    cu_seqlens=None, 
-                    max_seqlen=None, 
-                    return_attn_probs=return_attn_probs
-                    )
-            out = rearrange(output, '... h d -> ... (h d)')
+            # key_padding_mask: (B, S) → (B, 1, 1, S)
+            mask = ~key_padding_mask[:, None, None, :].to(torch.bool)
+            attn_scores = attn_scores.masked_fill(mask, float("-inf"))
 
-        out = self.out_proj(out)
+        if self.causal:
+            causal_mask = torch.triu(torch.ones(S, S, device=x.device), diagonal=1).bool()
+            attn_scores = attn_scores.masked_fill(causal_mask, float("-inf"))
+
+        attn_probs = F.softmax(attn_scores, dim=-1)
+        attn_probs = self.attention_dropout(attn_probs)
+
+        attn_output = torch.matmul(attn_probs, v)  # (B, H, S, D)
+        attn_output = rearrange(attn_output, 'b h s d -> b s (h d)')
+        out = self.out_proj(attn_output)
+
+        if return_attn_probs:
+            return out, attn_probs
         return out, None
