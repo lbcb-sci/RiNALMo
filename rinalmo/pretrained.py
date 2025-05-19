@@ -32,6 +32,6 @@ def get_pretrained_model(model_name: str, force_download: bool = False, lm_confi
     config = model_config(lm_config)
     model = RiNALMo(config)
     alphabet = Alphabet(**config['alphabet'])
-    model.load_state_dict(torch.load(pretrained_weights_path))
+    model.load_state_dict(torch.load(pretrained_weights_path), strict=False)
 
     return model, alphabet

@@ -6,8 +6,6 @@ import math
 from rinalmo.model.rope import RotaryPositionEmbedding
 
 import torch.nn.functional as F
-from flash_attn.layers.rotary import RotaryEmbedding
-
 
 from einops import rearrange
 
@@ -96,14 +94,7 @@ class FlashMultiHeadSelfAttention(nn.Module):
         self.attention_dropout = nn.Dropout(attention_dropout)
 
         if self.use_rot_emb:
-            self.rotary_emb = RotaryEmbedding(  # reuse your existing class
-                dim=self.head_dim,
-                base=10000.0,
-                interleaved=False,
-                scale_base=None,
-                pos_idx_in_fp32=True,
-                device=None
-            )
+            self.rotary_emb = RotaryPositionEmbedding(self.head_dim)
 
     def forward(self, x, key_padding_mask=None, return_attn_probs=False):
         """
@@ -114,14 +105,14 @@ class FlashMultiHeadSelfAttention(nn.Module):
 
         qkv = self.Wqkv(x)  # (B, S, 3 * H * D)
         qkv = rearrange(qkv, 'b s (three h d) -> b s three h d', three=3, h=self.num_heads)
+        qkv = qkv.permute(0, 3, 2, 1, 4)
 
-        if self.use_rot_emb:
-            qkv = self.rotary_emb(qkv, seqlen_offset=0)  # Apply rotary embeddings to Q and K only
-
-        qkv = torch.permute(qkv, (0, 3, 2, 1, 4))
         q = qkv[:, :, 0, :, :]
         k = qkv[:, :, 1, :, :]
         v = qkv[:, :, 2, :, :]
+
+        if self.use_rot_emb:
+            q, k = self.rotary_emb(q, k)
 
         attn_scores = torch.matmul(q, k.transpose(-2, -1))  # (B, H, S, S)
         attn_scores /= self.head_dim ** 0.5
