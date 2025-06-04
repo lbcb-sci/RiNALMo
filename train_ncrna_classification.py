@@ -13,7 +13,7 @@ from lightning.pytorch.strategies import DDPStrategy
 from rinalmo.data.alphabet import Alphabet
 from rinalmo.data.downstream.ncrna_classification.datamodule import ncRNADataModule
 from rinalmo.model.model import RiNALMo
-from rinalmo.utils.finetune_callback import GradualUnfreezing
+from rinalmo.utils.finetune_callback_nc import GradualUnfreezing
 from rinalmo.model.downstream import ncRNAClassificationHead
 from rinalmo.config import model_config
 
