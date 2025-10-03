@@ -21,10 +21,9 @@ def download_pretrained_model(model_name: str, local_path: Path):
 def get_pretrained_model(model_name: str, force_download: bool = False, lm_config: str = "giga") -> None:
     assert model_name in AVAILABLE_MODELS, f"Model '{model_name}' is not available! Available models: {AVAILABLE_MODELS}"
 
-    weights_dir = DEFAULT_CACHE_DIR
-    if environ.get("RINALMO_WEIGHTS_DIR") is not None:
-        weights_dir = Path(environ.get("RINALMO_WEIGHTS_DIR"))
-    pretrained_weights_path = weights_dir / f"{model_name}.pt"
+    pretrained_weights_path = DEFAULT_CACHE_DIR / f"{model_name}.pt"
+    if environ.get("RINALMO_PRETRAINED") is not None:
+        pretrained_weights_path = Path(environ.get("RINALMO_PRETRAINED"))
 
     if force_download or not pretrained_weights_path.exists():
         download_pretrained_model(model_name, pretrained_weights_path)
