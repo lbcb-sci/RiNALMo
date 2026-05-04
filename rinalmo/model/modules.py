@@ -55,7 +55,7 @@ class Transformer(nn.Module):
             attn_weights = []
 
         reprs = []
-        for block in self.blocks:
+        for i, block in enumerate(self.blocks):
             x, attn = checkpoint.checkpoint(
                 block, 
                 x,
@@ -64,7 +64,7 @@ class Transformer(nn.Module):
                 use_reentrant=False
                 )
 
-            if need_hidden:
+            if need_hidden and i < len(self.blocks) - 1:
                 reprs.append(x)
 
             if need_attn_weights:
@@ -72,6 +72,7 @@ class Transformer(nn.Module):
 
         x = self.final_layer_norm(x)
 
+        # Last hidden state => post-LN representation
         reprs.append(x)
         x = torch.stack(reprs, dim=1)
 
