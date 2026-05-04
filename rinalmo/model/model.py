@@ -17,7 +17,7 @@ class RiNALMo(nn.Module):
 
         self.token_dropout = TokenDropout(**self.config.model['token_dropout'])
 
-    def forward(self, tokens, need_attn_weights=False):
+    def forward(self, tokens, need_attn_weights=False, need_hidden=False):
         pad_mask = tokens.eq(self.pad_tkn_idx)
         x = self.embedding(tokens)
         x = self.token_dropout(x, tokens)
@@ -26,10 +26,11 @@ class RiNALMo(nn.Module):
             representation, attn_weights = self.transformer(
                 x,
                 key_padding_mask=torch.logical_not(pad_mask) if pad_mask is not None else None,
-                need_attn_weights=need_attn_weights
+                need_attn_weights=need_attn_weights,
+                need_hidden=need_hidden,
                 )
         else:
-            representation, attn_weights = self.transformer(x, key_padding_mask=pad_mask, need_attn_weights=need_attn_weights)
+            representation, attn_weights = self.transformer(x, key_padding_mask=pad_mask, need_attn_weights=need_attn_weights, need_hidden=need_hidden)
         x = self.lm_mask_head(representation)
 
         result = {"logits": x, "representation": representation}

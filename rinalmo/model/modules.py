@@ -49,11 +49,12 @@ class Transformer(nn.Module):
 
         self.final_layer_norm = nn.LayerNorm(embed_dim)
 
-    def forward(self, x, key_padding_mask=None, need_attn_weights=False):
+    def forward(self, x, key_padding_mask=None, need_attn_weights=False, need_hidden=False):
         attn_weights = None
         if need_attn_weights:
             attn_weights = []
 
+        reprs = []
         for block in self.blocks:
             x, attn = checkpoint.checkpoint(
                 block, 
@@ -63,10 +64,19 @@ class Transformer(nn.Module):
                 use_reentrant=False
                 )
 
+            if need_hidden:
+                reprs.append(x)
+
             if need_attn_weights:
                 attn_weights.append(attn)
 
         x = self.final_layer_norm(x)
+
+        reprs.append(x)
+        x = torch.stack(reprs, dim=1)
+
+        if not need_hidden:
+            x = x.squeeze(dim=1)
 
         return x, attn_weights
 
