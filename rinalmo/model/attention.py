@@ -166,7 +166,8 @@ class FlashMultiHeadSelfAttention(nn.Module):
                 base=10000.0,
                 interleaved=False,
                 scale_base=None,
-                pos_idx_in_fp32=True,  # fp32 RoPE precision
+                # Position indices are computed in fp32 (pos_idx_in_fp32=True
+                # was the default before flash-attn 2.7 removed the argument)
                 device=None
             )
         self.flash_self_attn = FlashAttention(causal=self.causal, softmax_scale=None, attention_dropout=attention_dropout)
@@ -206,7 +207,8 @@ class FlashMultiHeadSelfAttention(nn.Module):
         if key_padding_mask is not None:
             batch_size = qkv.shape[0]
             seqlen = qkv.shape[1]
-            x_unpad, indices, cu_seqlens, max_s = unpad_input(qkv, key_padding_mask)
+            # flash-attn >= 2.7 returns an additional value (used_seqlens_in_batch)
+            x_unpad, indices, cu_seqlens, max_s, *_ = unpad_input(qkv, key_padding_mask)
             output_unpad = self.flash_self_attn(
                     x_unpad, 
                     cu_seqlens=cu_seqlens, 
